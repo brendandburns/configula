@@ -28,17 +28,19 @@ func extractYaml(str string) (int, int, string) {
 	return 0, len(str), str
 }
 
-func (*simpleParser) GetSections(reader io.Reader) ([]Section, error) {
+func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) {
 	scanner := bufio.NewScanner(reader)
 	result := []Section{}
 	lineNum := 0
 	parenCount := 0
 	blockStart := Position{-1, -1}
 	blockBuffer := ""
+	lines := []string{}
 
 	for scanner.Scan() {
 		lineNum++
 		line := scanner.Text()
+		lines = append(lines, line)
 		if ix := strings.Index(line, "("); ix != -1 {
 			if parenCount == 0 {
 				blockStart.Line = lineNum
@@ -91,7 +93,7 @@ func (*simpleParser) GetSections(reader io.Reader) ([]Section, error) {
 			result[i].Data = []byte(str[parenIx + 1:strings.LastIndex(str, ")")])
 		}
 	}
-	return result, nil
+	return lines, result, nil
 }
 
 func NewSimpleParser() Parser {

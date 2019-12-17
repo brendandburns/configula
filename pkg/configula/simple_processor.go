@@ -43,7 +43,7 @@ func recursiveGenerate(indent string, node *yaml.Node) string {
 		result += indent + "}\n"
 		return result;
 	case "!!str":
-		return fmt.Sprintf("%s'%s'", indent, node.Value)
+		return fmt.Sprintf("%sYamlNode('%s')", indent, node.Value)
 	case "!!seq":
 		items := []string{}
 		for ix := range node.Content {
@@ -51,7 +51,7 @@ func recursiveGenerate(indent string, node *yaml.Node) string {
 		}
 		return fmt.Sprintf("[%s]", strings.Join(items, ","))
 	case "!~":
-		return node.Value
+		return "YamlExpr(lambda: " + node.Value + ")"
 	default:
 		return "<custom>"
 	}
@@ -63,7 +63,7 @@ func (s *simpleProcessor) Process(sections []Section) error {
 		if err := yaml.Unmarshal(sections[ix].Data, &node); err != nil {
 			return err
 		}
-		sections[ix].Yaml = recursiveGenerate("", &node)
+		sections[ix].Yaml = "YamlVariable(" + recursiveGenerate("", &node) + ")"
 	}
 	return nil
 }
