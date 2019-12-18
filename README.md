@@ -4,8 +4,16 @@ Configula is a configuration generation language and processor. It's goal is to 
 definition of declarative configuration easy and intuitive.
 
 ### Inspiration
-Configula is inspired by the JSX language in React that combines Javascript and HTML tags. Configula
-defines a similar pattern for Python and YAML.
+Configula is inspired by the [JSX language](https://reactjs.org/docs/introducing-jsx.html) in [React](https://reactjs.org) that combines Javascript and HTML tags. Configula
+defines a similar pattern for Python and YAML (for now).
+
+Consider this declaration:
+```
+my_object = foo: bar
+```
+
+This is neither Python, nor YAML, it combines the syntax of both. Instead of being a templating language like Jinja or others, or a DSL like HCL, it combines the power of
+a full programming language with the ease of a declarative syntax like YAML.
 
 ### Example
 
