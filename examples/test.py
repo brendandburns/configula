@@ -1,4 +1,8 @@
-foobar = "blah" + 1
+foobar = 'blah %d' % 1
+c = 'a'
+
+def fn(val):
+  return val + '!!'
 
 baz = (
   foo: "bar bar"
@@ -14,17 +18,18 @@ baz = (
     - c
     otherList: [1, 2, 3]
     anotherList: [
-      a, b, c, ! c + 'd' + fn(baz)
+      a, b, c, !~ c + 'd' + fn('bazzer')
     ]
 )
 
-foo: ! a + b
+foo: !~ a + b
 
 (
   alist:
   - one
-  !! 1 + 4
+  - !~ 1 + 4
   - two
   - three
 )
 
+baz.render()

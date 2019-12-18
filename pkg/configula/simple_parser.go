@@ -41,7 +41,7 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 		lineNum++
 		line := scanner.Text()
 		lines = append(lines, line)
-		if ix := strings.Index(line, "("); ix != -1 {
+		if ix := strings.Index(line, "<"); ix != -1 {
 			if parenCount == 0 {
 				blockStart.Line = lineNum
 				blockStart.Character = ix
@@ -50,7 +50,7 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 		}
 		if blockStart.Line != -1 {
 			blockBuffer += line + "\n"
-			if ix := strings.Index(line, ")"); ix != -1 {
+			if ix := strings.Index(line, ">"); ix != -1 {
 				parenCount--
 				if parenCount == 0 {
 					if blockStart.Line != lineNum {
@@ -76,6 +76,7 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 		   strings.HasPrefix(strip, "class") ||
 		   strings.HasPrefix(strip, "try") ||
 		   strings.HasPrefix(strip, "except") ||
+		   strings.Contains(strip, "lambda") ||
 		   strings.HasPrefix(strip, "#") {
 			continue
 		}
@@ -84,13 +85,13 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 	}
 	for i := range result {
 		str := string(result[i].Data)
-		if parenIx := strings.Index(str, "("); parenIx == -1 {
+		if parenIx := strings.Index(str, "<"); parenIx == -1 {
 			start, end, data := extractYaml(str)
 			result[i].LineStart.Character = start
 			result[i].LineEnd.Character = end
 			result[i].Data = []byte(data)
 		} else {
-			result[i].Data = []byte(str[parenIx + 1:strings.LastIndex(str, ")")])
+			result[i].Data = []byte(str[parenIx + 1:strings.LastIndex(str, ">")])
 		}
 	}
 	return lines, result, nil

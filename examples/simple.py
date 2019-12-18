@@ -11,8 +11,7 @@ bazr = (
     - !~ foobars + baz
 )
 
-print(bazr.render())
+bazr.render()
 
 baz = 5
-
-print(bazr.render())
+bazr.render()
