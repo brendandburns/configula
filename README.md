@@ -3,6 +3,10 @@
 Configula is a configuration generation language and processor. It's goal is to make the programattic
 definition of declarative configuration easy and intuitive.
 
+### Inspiration
+Configula is inspired by the JSX language in React that combines Javascript and HTML tags. Configula
+defines a similar pattern for Python and YAML.
+
 ### Example
 
 Consider the task of generating a Kubernetes namespace for a collection of users, where each
@@ -50,3 +54,21 @@ metadata:
   name: sally
 ---
 ```
+
+### Getting Started
+*** Download Configula for your platform
+
+*** Clone the git repo
+
+*** Try out an example
+
+*** Read the docs
+
+### FAQ
+*What about other Javascript? Java? Go? .NET? Other Language?*
+We're open to other programming languages. What other languages would you want to see? Please file issues.
+
+*What about JSON? HCL? Other Data Language?*
+We're open to other data languages too! What other languages would you want to see? Please file issues.
+
+

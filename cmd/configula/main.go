@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/configula/configula/pkg/configula"
+	"github.com/brendandburns/configula/pkg/configula"
 	flag "github.com/spf13/pflag"
 )
 
