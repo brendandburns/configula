@@ -14,7 +14,7 @@ configula <file-name> | kubectl create -f -
 
 #### Flags
 * `--debug=true`: Just dump the generated code, don't execute it.
-* `--python=</some/path/to/python>: Specify the Python interpreter to use
+* `--python=</some/path/to/python>`: Specify the Python interpreter to use
 
 #### Environment variables
 * `${CONFIGULA_PYTHON}`: Overrides `--python` flag and sets the Python interpreter to use.
