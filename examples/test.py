@@ -4,7 +4,7 @@ c = 'a'
 def fn(val):
   return val + '!!'
 
-baz = (
+baz = <
   foo: "bar bar"
   baz: blah
   bar: 1
@@ -20,16 +20,16 @@ baz = (
     anotherList: [
       a, b, c, !~ c + 'd' + fn('bazzer')
     ]
-)
+>
 
 foo: !~ a + b
 
-(
+<
   alist:
   - one
   - !~ 1 + 4
   - two
   - three
-)
+>
 
 baz.render()

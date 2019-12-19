@@ -1,37 +1,23 @@
 package configula
 
 import (
+	"bytes"
+	"reflect"
 	"testing"
 )
-
-func TestFindSpace(t *testing.T) {
-	tests := []struct {
-		value string
-		start int
-		expected int
-		name string
-	} {
-		{ "abc1234:asbd", 10, -1, "no space" },
-		{ "abc 123 : acd", -1, -1, "negative start"},
-		{ "abc 123 : acd", 5, 3, "simple" },
-		{ "abc\t123:acd", 10, 3, "tabs" },
-	}
-	for _, test := range tests {
-		if ix := findSpace(test.value, test.start); ix != test.expected {
-			t.Errorf("[%s]: Expected %d, saw %d", test.name, test.expected, ix)
-		}	
-	}
-}
 
 func TestExtractYaml(t *testing.T) {
 	tests := []struct {
 		value string
 		start int
-		end int
-		yaml string
-		name string
-	} {
-		{ "foo = baz: bar", 5, 14, "baz: bar", "simple" }, 
+		end   int
+		yaml  string
+		name  string
+	}{
+		{"foo = baz: bar", 6, 14, "baz: bar", "simple"},
+		{"return baz: bar", 7, 15, "baz: bar", "return"},
+		{"render(baz: bar)", 7, 15, "baz: bar", "function"},
+		{"foo = baz: !~ 1 + 2", 6, 19, "baz: !~ 1 + 2", "yaml tag"},
 	}
 	for _, test := range tests {
 		start, end, yaml := extractYaml(test.value)
@@ -43,6 +29,148 @@ func TestExtractYaml(t *testing.T) {
 		}
 		if yaml != test.yaml {
 			t.Errorf("[%s]: Expected '%s', saw '%s'", test.name, test.yaml, yaml)
+		}
+	}
+}
+
+func TestSimpleParser(t *testing.T) {
+	tests := []struct {
+		data     string
+		sections []Section
+	}{
+		{
+			data: "foo = bar: baz",
+			sections: []Section{
+				{
+					Data: []byte("bar: baz"),
+					LineStart: Position{1, 6},
+					LineEnd:   Position{1, 14},
+				},
+			},
+		},
+		{
+			data: `
+# Simple example of creating 3 Kubernetes namespaces
+
+# Our users in need of namespaces
+users = ['jim', 'sally', 'sue']
+
+# The namespaces objects from YAML
+namespaces = map(lambda user: <
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: !~ user
+    >, users)
+
+# Output
+render(namespaces)
+`,
+			sections: []Section{
+				Section{
+					Data: []byte(`
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: !~ user
+    `),
+					LineStart: Position{8, 30},
+					LineEnd: Position{13, 4},
+				},
+			},
+		},
+		{
+			data: `foobar = 'blah %d' % 1
+c = 'a'
+			
+def fn(val):
+  return val + '!!'
+			
+baz = <
+  foo: "bar bar"
+  baz: blah
+  bar: 1
+  bob:
+	foo: bar
+	blah:
+	  blah: blahber
+	someList:
+	- a
+	- b
+	- c
+	otherList: [1, 2, 3]
+	anotherList: [
+	  a, b, c, !~ c + 'd' + fn('bazzer')
+	]
+>
+			
+foo: !~ a + b
+			
+<
+  alist:
+  - one
+  - !~ 1 + 4
+  - two
+  - three
+>
+			
+baz.render()`,
+			sections: []Section{
+				Section{
+					Data: []byte(`
+  foo: "bar bar"
+  baz: blah
+  bar: 1
+  bob:
+	foo: bar
+	blah:
+	  blah: blahber
+	someList:
+	- a
+	- b
+	- c
+	otherList: [1, 2, 3]
+	anotherList: [
+	  a, b, c, !~ c + 'd' + fn('bazzer')
+	]
+`),
+					LineStart: Position{7, 6},
+					LineEnd: Position{23, 0},
+				},
+				Section{
+					Data: []byte("foo: !~ a + b"),
+					LineStart: Position{25, 0},
+					LineEnd: Position{25, 13},
+				},
+				Section{
+					Data: []byte(`
+  alist:
+  - one
+  - !~ 1 + 4
+  - two
+  - three
+`),
+					LineStart: Position{27, 0},
+					LineEnd: Position{33, 0},
+				},
+			},
+		},
+	}
+	for _, test := range tests {
+		parser := NewSimpleParser()
+		_, sections, err := parser.GetSections(bytes.NewBufferString(test.data))
+		if err != nil {
+			t.Errorf("Unexpected error: %v", err)
+		}
+		if len(sections) != len(test.sections) {
+			t.Errorf("Unexpected sections:\n%#v\n%#v", sections, test.sections)
+		}
+		for ix := range test.sections {
+			expected := test.sections[ix]
+			actual := sections[ix]
+			if !reflect.DeepEqual(expected, actual) {
+				t.Errorf("Unexpected section (%d):\n%#v\n%#v", ix, expected, actual)
+			}
 		}
 	}
 }

@@ -1,31 +1,37 @@
 package configula
 
 import (
-	"io"
 	"bufio"
+	"io"
+	"regexp"
 	"strings"
 )
 
-type simpleParser struct {}
-
-func findSpace(str string, ix int) int {
-	for ix >= 0 {
-		if str[ix] == ' ' || str[ix] == '\t' {
-			return ix
-		}
-		ix--
-		continue
-	}
-	return -1
-}
+type simpleParser struct{}
 
 func extractYaml(str string) (int, int, string) {
-	ix := strings.Index(str, ":")
-	start := findSpace(str, ix)
-	if start != -1 {
-		return start + 1, len(str), str[start:]
+	regex := regexp.MustCompile(`^(?:.*[\s\(])*([a-z0-9]+:\s*(?:(?:[a-z0-9]+)|(?:!.*)))(?:[\s\)].*)*$`)
+	index := regex.FindSubmatchIndex([]byte(str))
+	if index != nil {
+		return index[2], index[3], str[index[2]:index[3]]
 	}
-	return 0, len(str), str
+	return -1, -1, str
+}
+
+func isPythonLine(str string) bool {
+	if strings.Index(str, ":") == -1 {
+		return true
+	}
+	return strings.HasPrefix(str, "def") ||
+		strings.HasPrefix(str, "if") ||
+		strings.HasPrefix(str, "elif") ||
+		strings.HasPrefix(str, "else") ||
+		strings.HasPrefix(str, "while") ||
+		strings.HasPrefix(str, "for") ||
+		strings.HasPrefix(str, "class") ||
+		strings.HasPrefix(str, "try") ||
+		strings.HasPrefix(str, "except") ||
+		strings.Contains(str, "lambda")
 }
 
 func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) {
@@ -41,6 +47,10 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 		lineNum++
 		line := scanner.Text()
 		lines = append(lines, line)
+		if strings.HasPrefix(line, "#") {
+			continue
+		}
+
 		if ix := strings.Index(line, "<"); ix != -1 {
 			if parenCount == 0 {
 				blockStart.Line = lineNum
@@ -63,21 +73,7 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 			}
 			continue
 		}
-		if strings.Index(line, ":") == -1 {
-			continue
-		}
-		strip := strings.TrimSpace(line)
-		if strings.HasPrefix(strip, "def") ||
-		   strings.HasPrefix(strip, "if") ||
-		   strings.HasPrefix(strip, "elif") ||
-		   strings.HasPrefix(strip, "else") ||
-		   strings.HasPrefix(strip, "while") ||
-		   strings.HasPrefix(strip, "for") ||
-		   strings.HasPrefix(strip, "class") ||
-		   strings.HasPrefix(strip, "try") ||
-		   strings.HasPrefix(strip, "except") ||
-		   strings.Contains(strip, "lambda") ||
-		   strings.HasPrefix(strip, "#") {
+		if isPythonLine(strings.TrimSpace(line)) {
 			continue
 		}
 		pos := Position{lineNum, -1}
@@ -91,12 +87,13 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 			result[i].LineEnd.Character = end
 			result[i].Data = []byte(data)
 		} else {
-			result[i].Data = []byte(str[parenIx + 1:strings.LastIndex(str, ">")])
+			result[i].Data = []byte(str[parenIx+1 : strings.LastIndex(str, ">")])
 		}
 	}
 	return lines, result, nil
 }
 
+// NewSimpleParser creates a parser that is simple
 func NewSimpleParser() Parser {
 	return &simpleParser{}
 }
