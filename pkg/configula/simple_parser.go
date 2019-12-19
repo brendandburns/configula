@@ -23,7 +23,7 @@ func extractYaml(str string) (int, int, string) {
 	ix := strings.Index(str, ":")
 	start := findSpace(str, ix)
 	if start != -1 {
-		return start, len(str), str[start:]
+		return start + 1, len(str), str[start:]
 	}
 	return 0, len(str), str
 }
