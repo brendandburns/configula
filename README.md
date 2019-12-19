@@ -66,30 +66,32 @@ metadata:
 ```
 
 ### Getting Started
-*** Download Configula for your platform
+Download Configula for your platform
 * [darwin](https://github.com/brendandburns/configula/releases/download/0.0.1/darwin.tgz)
 * [linux](https://github.com/brendandburns/configula/releases/download/0.0.1/linux.tgz)
 * [windows](https://github.com/brendandburns/configula/releases/download/0.0.1/windows.zip)
 
-*** Clone the git repo
+Clone the git repo
 ```sh
 git clone https://github.com/brendandburns/configula
 cd configula
 ```
 
-*** Try out an example
+Try out an example
 
 ```sh
 ./configula examples/tiny.py
 ```
 
-*** Read the docs
+Read the [docs](https://github.com/brendandburns/configula/tree/master/docs)
 
 ### FAQ
 *What about other Javascript? Java? Go? .NET? Other Language?*
+
 We're open to other programming languages. What other languages would you want to see? Please file issues.
 
 *What about JSON? HCL? Other Data Language?*
+
 We're open to other data languages too! What other languages would you want to see? Please file issues.
 
 

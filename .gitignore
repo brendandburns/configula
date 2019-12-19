@@ -4,3 +4,4 @@ configula
 __pycache__/
 *.py[cod]
 *$py.class
+go.sum
