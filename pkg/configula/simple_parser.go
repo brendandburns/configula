@@ -34,6 +34,15 @@ func isPythonLine(str string) bool {
 		strings.Contains(str, "lambda")
 }
 
+func trimBrackets(str string) string {
+	start := strings.Index(str, "<")
+	end := strings.LastIndex(str, ">")
+	if start == -1 || end == -1 {
+		return str
+	}
+	return str[start+1:end]
+}
+
 func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) {
 	scanner := bufio.NewScanner(reader)
 	result := []Section{}
@@ -65,7 +74,7 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 				if parenCount == 0 {
 					if blockStart.Line != lineNum {
 						end := Position{lineNum, ix}
-						result = append(result, Section{[]byte(blockBuffer), blockStart, end, ""})
+						result = append(result, Section{[]byte(trimBrackets(blockBuffer)), blockStart, end, ""})
 					}
 					blockStart = Position{-1, -1}
 					blockBuffer = ""
@@ -76,19 +85,9 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 		if isPythonLine(strings.TrimSpace(line)) {
 			continue
 		}
-		pos := Position{lineNum, -1}
-		result = append(result, Section{[]byte(line), pos, pos, ""})
-	}
-	for i := range result {
-		str := string(result[i].Data)
-		if parenIx := strings.Index(str, "<"); parenIx == -1 {
-			start, end, data := extractYaml(str)
-			result[i].LineStart.Character = start
-			result[i].LineEnd.Character = end
-			result[i].Data = []byte(data)
-		} else {
-			result[i].Data = []byte(str[parenIx+1 : strings.LastIndex(str, ">")])
-		}
+		start, end, data := extractYaml(line)
+		result = append(result,
+			Section{[]byte(data), Position{lineNum, start}, Position{lineNum, end}, ""})
 	}
 	return lines, result, nil
 }

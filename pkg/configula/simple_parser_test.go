@@ -6,6 +6,33 @@ import (
 	"testing"
 )
 
+func TestIsPythonLine(t * testing.T) {
+	tests := []struct{
+		line string
+		isPython bool
+	} {
+		{ "foo = 1 + 2", true},
+		{ "def fn():", true},
+		{ "bar: baz", false},
+		{ "lambda x: x * 2", true},
+		{ "if foo:", true},
+		{ "else: ", true},
+		{ "elif foo:", true},
+	}
+
+	for _, test := range tests {
+		if isPythonLine(test.line) {
+			if !test.isPython {
+				t.Errorf("Expected %s to not be python but it was", test.line)
+			}
+		} else {
+			if test.isPython {
+				t.Errorf("Expected %s to be Python but it's not", test.line)
+			}
+		}
+	}
+}
+
 func TestExtractYaml(t *testing.T) {
 	tests := []struct {
 		value string

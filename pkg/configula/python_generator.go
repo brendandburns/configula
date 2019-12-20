@@ -39,12 +39,13 @@ func (p *pythonGenerator) Generate(lines []string, sections []Section) (io.Reade
 			}
 			lineNum = currentSection.LineEnd.Line
 			line := lines[lineNum - 1]
+			remain := ""
 			if currentSection.LineEnd.Character + 1 < len(line) {
-				if _, err := fmt.Fprintf(buff, "%s\n", line[currentSection.LineEnd.Character + 1:]); err != nil {
-					return nil, err
-				}
+				remain = line[currentSection.LineEnd.Character + 1:]
 			}
-
+			if _, err := fmt.Fprintf(buff, "%s\n", remain); err != nil {
+				return nil, err
+			}
 			section++
 		}
 		lineNum++
