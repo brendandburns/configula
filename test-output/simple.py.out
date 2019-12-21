@@ -1,0 +1,16 @@
+bar:
+  bar:
+  - one
+  - two
+  - 3
+  baz: bazl
+  blah: foo
+
+bar:
+  bar:
+  - one
+  - two
+  - 6
+  baz: bazl
+  blah: foo
+

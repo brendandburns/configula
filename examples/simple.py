@@ -1,7 +1,7 @@
 foobars = 1
 baz = 2
 
-bazr = (
+bazr = <
   bar:
     blah: foo
     baz: bazl
@@ -9,7 +9,7 @@ bazr = (
     - one
     - two
     - !~ foobars + baz
-)
+>
 
 bazr.render()
 
