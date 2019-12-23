@@ -64,6 +64,7 @@ func TestSimpleParser(t *testing.T) {
 	tests := []struct {
 		data     string
 		sections []Section
+		name string
 	}{
 		{
 			data: "foo = bar: baz",
@@ -74,6 +75,27 @@ func TestSimpleParser(t *testing.T) {
 					LineEnd:   Position{1, 14},
 				},
 			},
+			name: "simple",
+		},
+		{
+			data: `
+foo =
+  bar: baz
+  blah: bar
+
+foo.render()
+`,
+			sections: []Section{
+				{
+					Data: []byte(
+`  bar: baz
+  blah: bar
+`),
+					LineStart: Position{3, 2},
+					LineEnd:   Position{5, 0},
+				},
+			},
+			name: "no brackets",
 		},
 		{
 			data: `
@@ -105,6 +127,7 @@ render(namespaces)
 					LineEnd: Position{13, 4},
 				},
 			},
+			name: "brackets",
 		},
 		{
 			data: `foobar = 'blah %d' % 1
@@ -181,6 +204,7 @@ baz.render()`,
 					LineEnd: Position{33, 0},
 				},
 			},
+			name: "complex",
 		},
 	}
 	for _, test := range tests {
@@ -190,13 +214,18 @@ baz.render()`,
 			t.Errorf("Unexpected error: %v", err)
 		}
 		if len(sections) != len(test.sections) {
-			t.Errorf("Unexpected sections:\n%#v\n%#v", sections, test.sections)
+			t.Errorf("[Test %s] Expected %d saw %d sections", test.name, len(test.sections), len(sections))
+			t.Errorf("[Test %s] Unexpected sections:\n%#v\n%#v", test.name, sections, test.sections)
+			for ix := range sections {
+				t.Errorf("%s\n", string(sections[ix].Data))
+			}
+			t.FailNow()
 		}
 		for ix := range test.sections {
 			expected := test.sections[ix]
 			actual := sections[ix]
 			if !reflect.DeepEqual(expected, actual) {
-				t.Errorf("Unexpected section (%d):\n%#v\n%#v", ix, expected, actual)
+				t.Errorf("[Test %s ] Unexpected section (%d):\n%#v\n%#v", test.name, ix, string(expected.Data), string(actual.Data))
 			}
 		}
 	}
