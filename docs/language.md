@@ -22,9 +22,9 @@ def __init__(self):
 ```
 
 ### Multi-line YAML
-You can also use multi-line YAML objects in your Python. For now this uses the `<` and `>` delimiters (we're investigating lifting this!).
+You can also use multi-line YAML objects in your Python. You can optionally use `<` and `>` delimiters or simply start YAML on the next line of the file.
 
-Examples of multi-line YAML:
+Examples of multi-line YAML using brackets:
 
 ```python
 return <
@@ -37,6 +37,15 @@ return <
     - are
     - ok
 >
+```
+
+Example of multi-line YAML without brackets:
+```
+ns = \
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: brendan
 ```
 
 ### Inline Python

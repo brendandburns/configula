@@ -13,3 +13,4 @@ namespaces = map(lambda user: <
 
 # Output
 render(namespaces)
+
