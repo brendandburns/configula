@@ -2,7 +2,6 @@ package configula
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"regexp"
 	"strings"
@@ -10,9 +9,12 @@ import (
 
 type simpleParser struct{}
 
+var (
+	keyValueRegex = regexp.MustCompile(`^(?:.*[\s\(])*([a-zA-Z0-9]+:\s*(?:(?:[a-zA-Z0-9]+)|(?:!.*)))(?:[\s\)].*)*$`)
+)
+
 func extractYaml(str string) (int, int, string) {
-	regex := regexp.MustCompile(`^(?:.*[\s\(])*([a-z0-9]+:\s*(?:(?:[a-z0-9]+)|(?:!.*)))(?:[\s\)].*)*$`)
-	index := regex.FindSubmatchIndex([]byte(str))
+	index := keyValueRegex.FindSubmatchIndex([]byte(str))
 	if index != nil {
 		return index[2], index[3], str[index[2]:index[3]]
 	}
@@ -20,7 +22,7 @@ func extractYaml(str string) (int, int, string) {
 }
 
 func isPythonLine(str string) bool {
-	if strings.Index(str, ":") == -1 {
+	if strings.Index(str, ":") == -1 && strings.Index(str, "- ") == -1 {
 		return true
 	}
 	return strings.HasPrefix(str, "def") ||
@@ -38,7 +40,7 @@ func isPythonLine(str string) bool {
 func isYamlStart(line string) int {
 	if ix := strings.Index(line, ":"); ix != -1 {
 		start, _, _ := extractYaml(line)
-		if start == 2 {
+		if start == 2 || start == 0 {
 			return start
 		}
 	}
@@ -101,9 +103,7 @@ func (*simpleParser) GetSections(reader io.Reader) ([]string, []Section, error) 
 				if parenCount == 0 {
 					if blockStart.Line != lineNum {
 						end := Position{lineNum, ix}
-						fmt.Printf("Adding here!\n")
 						trimmed := trimBrackets(blockBuffer)
-						fmt.Printf("%s\n%s\n", blockBuffer, trimmed)
 						result = append(result, Section{[]byte(trimmed), blockStart, end, ""})
 					}
 					blockStart = Position{-1, -1}

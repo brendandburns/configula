@@ -16,7 +16,7 @@ func (p *pythonGenerator) Generate(lines []string, sections []Section) (io.Reade
 	lineNum := 1
 	section := 0
 	buff := &bytes.Buffer{}
-	if _, err := fmt.Fprintf(buff, "from runtime.configula import (render, YamlExpr, YamlNode, YamlVariable)\n"); err != nil {
+	if _, err := fmt.Fprintf(buff, "from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)\n"); err != nil {
 		return nil, err
 	}
 	
@@ -29,7 +29,7 @@ func (p *pythonGenerator) Generate(lines []string, sections []Section) (io.Reade
 			}
 		}
 		if lineNum == currentSection.LineStart.Line {
-			if currentSection.LineStart.Character != 0 {
+			if currentSection.LineStart.Character >= 0 {
 				if _, err := fmt.Fprintf(buff, line[0:currentSection.LineStart.Character]); err != nil {
 					return nil, err
 				}
@@ -56,5 +56,6 @@ func (p *pythonGenerator) Generate(lines []string, sections []Section) (io.Reade
 			return nil, err
 		}
 	}
+	fmt.Fprintf(buff, "maybe_render()\n")
 	return buff, nil
 }

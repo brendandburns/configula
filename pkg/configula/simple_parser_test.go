@@ -45,6 +45,7 @@ func TestExtractYaml(t *testing.T) {
 		{"return baz: bar", 7, 15, "baz: bar", "return"},
 		{"render(baz: bar)", 7, 15, "baz: bar", "function"},
 		{"foo = baz: !~ 1 + 2", 6, 19, "baz: !~ 1 + 2", "yaml tag"},
+		// TODO {"foo: [1, 2, 3]", 0, 5, "foo: [1, 2, 3]", "yaml sequence"},
 	}
 	for _, test := range tests {
 		start, end, yaml := extractYaml(test.value)
@@ -96,6 +97,33 @@ foo.render()
 				},
 			},
 			name: "no brackets",
+		},
+		{
+			data: `
+users = ['jim', 'sally', 'sue']
+
+ns =
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: !~ user
+
+for user in users:
+  ns.render()
+`,
+			sections: []Section{
+				{
+					Data: []byte(
+`  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: !~ user
+`),
+					LineStart: Position{5, 2},
+					LineEnd:   Position{9, 0},
+				},
+			},
+			name: "bigger no brackets",
 		},
 		{
 			data: `
@@ -188,9 +216,9 @@ baz.render()`,
 					LineEnd: Position{23, 0},
 				},
 				Section{
-					Data: []byte("foo: !~ a + b"),
+					Data: []byte("foo: !~ a + b\n"),
 					LineStart: Position{25, 0},
-					LineEnd: Position{25, 13},
+					LineEnd: Position{26, 0},
 				},
 				Section{
 					Data: []byte(`
@@ -226,6 +254,7 @@ baz.render()`,
 			actual := sections[ix]
 			if !reflect.DeepEqual(expected, actual) {
 				t.Errorf("[Test %s ] Unexpected section (%d):\n%#v\n%#v", test.name, ix, string(expected.Data), string(actual.Data))
+				t.Errorf("[Test %s ] Unexpected section (%d):\n%#v\n%#v", test.name, ix, expected, actual)
 			}
 		}
 	}

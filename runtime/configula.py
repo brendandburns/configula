@@ -1,5 +1,10 @@
 import yaml
 
+def maybe_render():
+    if YamlVariable.last:
+        if hasattr(type(YamlVariable.last), 'render'):
+            YamlVariable.last.render()
+
 def render(obj):
     if hasattr(type(obj), '__iter__'):
         for o in obj:
@@ -7,6 +12,7 @@ def render(obj):
             print("---")
     else:
         o.render()
+    return None
 
 class YamlNode(yaml.YAMLObject):
     def __init__(self, value):
@@ -44,8 +50,12 @@ def yaml_expr_representer(dumper, data):
 yaml.add_representer(YamlExpr, yaml_expr_representer)
 
 class YamlVariable:
+    # This is used to auto-magically print un-rendered bits
+    last = None
     def __init__(self, data):
         self.data = data
+        YamlVariable.last = self
 
     def render(self):
         print(yaml.dump(self.data))
+        YamlVariable.last = None

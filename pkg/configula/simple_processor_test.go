@@ -158,7 +158,7 @@ baz.render()`,
 				Section{
 					Data:      []byte("foo: !~ a + b"),
 					LineStart: Position{25, 0},
-					LineEnd:   Position{25, 13},
+					LineEnd:   Position{26, 0},
 					Yaml:      "YamlVariable({'foo':YamlExpr(lambda: a + b), })",
 				},
 				Section{

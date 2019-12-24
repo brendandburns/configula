@@ -1,0 +1,10 @@
+baz: blah
+eight: 8
+foo: bar
+object:
+  five:
+  - 6
+  - 7
+  one: two
+  three: four
+

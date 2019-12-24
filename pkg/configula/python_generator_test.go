@@ -26,9 +26,10 @@ func TestGenerate(t *testing.T) {
 				},
 			},
 			output:
-`from runtime.configula import (render, YamlExpr, YamlNode, YamlVariable)
+`from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
 foo = YamlModule(bar: baz)
 foo.render()
+maybe_render()
 `,
 			name: "simple",
 		},
@@ -48,9 +49,10 @@ foo.render()
 				},
 			},
 			output:
-`from runtime.configula import (render, YamlExpr, YamlNode, YamlVariable)
+`from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
 foo = YamlNode(YamlNode(bar: baz),YamlNode(blah: flub))
 foo.render()
+maybe_render()
 `,
 			name: "multi-line",
 		},
