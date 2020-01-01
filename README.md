@@ -12,7 +12,7 @@ Consider this declaration:
 my_object = foo: bar
 ```
 
-It's neither Python, nor YAML. It combines the syntax of both. Instead of being a templating language like Jinja or others, or a DSL like HCL, it combines the power of
+It's neither Python, nor YAML. It combines the syntax of both. Instead of being a templating language like Jinja or others, or a Domain-Specific Language (DSL) like [HCL](https://www.terraform.io/docs/configuration/syntax.html), [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax) or [jsonnet](https://jsonnet.org/), it combines the power of
 a full programming language with the ease of a declarative syntax like YAML.
 
 ### Example
