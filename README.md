@@ -40,7 +40,27 @@ namespaces = map(lambda user: <
 render(namespaces)
 ```
 
-You run this through the `configula` interpreter:
+An alternate version that uses a for loop looks like this:
+
+```python
+# Simple example of creating 3 Kubernetes namespaces
+users = [ 'bob', 'sue', 'sally']
+
+# This Python object is defined by inline YAML
+namespace = <
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    # The !~ syntax enables python substitution, in this case a variable named `userName`
+    name: !~ user
+>
+
+for user in users:
+  namespace.render()
+  print("---")
+```
+
+In either case you you run this through the `configula` interpreter:
 ```sh
 configula namespaces.py
 ```
