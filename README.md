@@ -1,6 +1,6 @@
 ## Configula
 
-Configula is a configuration generation language and processor. It's goal is to make the programattic
+Configula is a configuration generation language and processor. It's goal is to make the programmatic
 definition of declarative configuration easy and intuitive.
 
 ### Inspiration
@@ -15,7 +15,7 @@ my_object = foo: bar
 It's neither Python, nor YAML. It combines the syntax of both. Instead of being a templating language like [Jinja](https://www.palletsprojects.com/p/jinja/) or others, or a Domain-Specific Language (DSL) like [HCL](https://www.terraform.io/docs/configuration/syntax.html), [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax) or [jsonnet](https://jsonnet.org/), it combines the power of`
 a full programming language with the ease of a declarative syntax like YAML.
 
-### Example
+### Programmatic Example
 
 Let's generate a Kubernetes namespace for a collection of users. Each namespace get's the user's name.
 
@@ -64,6 +64,32 @@ metadata:
   name: sally
 ---
 ```
+
+### Templating Example
+The previous example is programming centric. If your configuration is mostly data and not much code, sometimes it makes
+sense to have a data-centric template. Such templates look more like YAML than Python.
+
+Here is a simple example:
+
+```yaml
+first = "brendan"
+last = "burns"
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: !~ first + ' ' + last
+```
+
+When you run this with `configula namespace.yml` it will output:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: brendan burns
+```
+
 
 ### Getting Started
 Download Configula for your platform

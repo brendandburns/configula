@@ -1,0 +1,8 @@
+first = "brendan"
+last = "burns"
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: !~ first + ' ' + last
+
