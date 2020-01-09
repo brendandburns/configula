@@ -7,7 +7,7 @@ go test ./pkg/configula
 go build ./cmd/configula
 
 echo "Running integration tests."
-for x in examples/*.py; do
+for x in examples/*.py examples/*.yml; do
     file=$(basename $x)
     echo "Testing $x"
     ./configula examples/${file} > test-output/${file}.test
