@@ -113,9 +113,9 @@ metadata:
 
 ### Getting Started
 Download Configula for your platform
-* [darwin](https://github.com/brendandburns/configula/releases/download/0.0.2/darwin.tgz)
-* [linux](https://github.com/brendandburns/configula/releases/download/0.0.2/linux.tgz)
-* [windows](https://github.com/brendandburns/configula/releases/download/0.0.2/windows.zip)
+* [darwin](https://github.com/brendandburns/configula/releases/download/0.0.3/darwin.tgz)
+* [linux](https://github.com/brendandburns/configula/releases/download/0.0.3/linux.tgz)
+* [windows](https://github.com/brendandburns/configula/releases/download/0.0.3/windows.zip)
 
 Clone the git repo
 ```sh
