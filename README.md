@@ -131,6 +131,22 @@ Try out an example
 
 Read the [docs](https://github.com/brendandburns/configula/tree/master/docs)
 
+### Integrating with Kubernetes
+Configula can be used as a `kubectl` plugin.
+
+To install the plugin run this command:
+
+```
+# assumes that configula is in /usr/local/bin/ change paths as needed.
+ln -s /usr/local/bin/kubectl-configula /usr/local/bin/configula
+```
+
+Once that's done you can run:
+
+```sh
+kubectl configula create -f examples/namespaces.py
+```
+
 ### FAQ
 *What about other Javascript? Java? Go? .NET? Other Language?*
 
