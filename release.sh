@@ -12,7 +12,7 @@ echo "Building Darwin"
 GOOS=darwin go build ./cmd/configula
 mv configula darwin/configula
 
-echo "Building Windows"ls
+echo "Building Windows"
 
 GOOS=windows go build ./cmd/configula
 mv configula.exe windows/configula.exe
