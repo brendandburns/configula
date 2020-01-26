@@ -8,6 +8,15 @@ import (
 
 type pythonGenerator struct {}
 
+var importHeader = `
+import sys
+try:
+  from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
+except ImportError:
+  print('Can not find configula runtime!')
+  sys.exit(-1)
+`
+
 func NewPythonGenerator() Generator {
 	return &pythonGenerator{}
 }
@@ -16,7 +25,7 @@ func (p *pythonGenerator) Generate(lines []string, sections []Section) (io.Reade
 	lineNum := 1
 	section := 0
 	buff := &bytes.Buffer{}
-	if _, err := fmt.Fprintf(buff, "from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)\n"); err != nil {
+	if _, err := fmt.Fprintf(buff, importHeader); err != nil {
 		return nil, err
 	}
 	

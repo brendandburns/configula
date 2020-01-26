@@ -70,7 +70,7 @@ func process(filename string, output io.Writer) {
 	}
 
 	if err := rn.Run(file, output, *dryRun); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to execute: %s", err)
+		fmt.Fprintf(os.Stderr, "Failed to execute: %s\n", err)
 		os.Exit(-1)
 	}
 }
