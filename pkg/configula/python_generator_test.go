@@ -26,7 +26,13 @@ func TestGenerate(t *testing.T) {
 				},
 			},
 			output:
-`from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
+`
+import sys
+try:
+  from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
+except ImportError:
+  print('Can not find configula runtime!')
+  sys.exit(-1)
 foo = YamlModule(bar: baz)
 foo.render()
 maybe_render()
@@ -49,7 +55,13 @@ maybe_render()
 				},
 			},
 			output:
-`from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
+`
+import sys
+try:
+  from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
+except ImportError:
+  print('Can not find configula runtime!')
+  sys.exit(-1)
 foo = YamlNode(YamlNode(bar: baz),YamlNode(blah: flub))
 foo.render()
 maybe_render()
