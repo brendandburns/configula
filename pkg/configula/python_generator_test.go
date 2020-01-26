@@ -32,7 +32,11 @@ try:
   from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
 except ImportError:
   print('Can not find configula runtime!')
-  sys.exit(-1)
+  sys.exit(1)
+
+if sys.version_info[0] < 3:
+  print('Configula requires python3')
+  sys.exit(2)
 foo = YamlModule(bar: baz)
 foo.render()
 maybe_render()
@@ -61,7 +65,11 @@ try:
   from runtime.configula import (maybe_render, render, YamlExpr, YamlNode, YamlVariable)
 except ImportError:
   print('Can not find configula runtime!')
-  sys.exit(-1)
+  sys.exit(1)
+
+if sys.version_info[0] < 3:
+  print('Configula requires python3')
+  sys.exit(2)
 foo = YamlNode(YamlNode(bar: baz),YamlNode(blah: flub))
 foo.render()
 maybe_render()
