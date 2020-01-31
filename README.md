@@ -60,7 +60,7 @@ for user in users:
   print("---")
 ```
 
-In either case you you run this through the `configula` interpreter:
+In either case you run this through the `configula` interpreter:
 ```sh
 configula namespaces.py
 ```
