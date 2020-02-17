@@ -112,24 +112,32 @@ metadata:
 
 
 ### Getting Started
+
+The easiest way to get started is with the Docker image:
+
+```sh
+# Clone the repo
+git clone https://github.com/brendandburns/configula
+cd configula
+
+# Run the namespaces example
+docker run -v $PWD/examples:/examples brendanburns/configula \
+  ./configula examples/namespaces.py
+```
+
+See this [directory](https://github.com/brendandburns/configula/tree/master/examples) for more examples.
+
+Read the [docs](https://github.com/brendandburns/configula/tree/master/docs)
+
+### Installing configula
+
+### Getting Started
+
 Download Configula for your platform
 * [darwin](https://github.com/brendandburns/configula/releases/download/0.0.3/configula.darwin.tar.gz)
 * [linux](https://github.com/brendandburns/configula/releases/download/0.0.3/configula.linux.tar.gz)
 * [windows](https://github.com/brendandburns/configula/releases/download/0.0.3/configula.windows.zip)
 
-Clone the git repo
-```sh
-git clone https://github.com/brendandburns/configula
-cd configula
-```
-
-Try out an example
-
-```sh
-./configula examples/tiny.py
-```
-
-Read the [docs](https://github.com/brendandburns/configula/tree/master/docs)
 
 ### Integrating with Kubernetes
 Configula can be used as a `kubectl` plugin.
