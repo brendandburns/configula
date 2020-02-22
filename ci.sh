@@ -11,7 +11,7 @@ for x in examples/*.py examples/*.yml; do
     file=$(basename $x)
     echo "Testing $x"
     ./configula examples/${file} > test-output/${file}.test
-    diff test-output/${file}.test test-output/${file}.out
+    diff --strip-trailing-cr test-output/${file}.test test-output/${file}.out
 done
 
 rm test-output/*.test

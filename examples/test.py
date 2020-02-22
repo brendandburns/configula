@@ -1,5 +1,7 @@
 foobar = 'blah %d' % 1
 c = 'a'
+quoted = 'what\'ll happen here?'
+newlines = 'print\r\nme!'
 
 def fn(val):
   return val + '!!'
@@ -17,6 +19,13 @@ baz = <
     - b
     - c
     otherList: [1, 2, 3]
+    boolList: [true, false, !~ True]
+    nullVal: null
+    nullVallExpr: !~ None
+    stringWithQuotes: what'll happen here?
+    exprWithQuotes: !~ quoted
+    stringWithNewline: 'print\r\nme!'
+    exprWithNewline: !~ newlines
     anotherList: [
       a, b, c, !~ c + 'd' + fn('bazzer')
     ]

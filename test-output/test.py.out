@@ -8,7 +8,15 @@ bob:
   - adbazzer!!
   blah:
     blah: blahber
+  boolList:
+  - true
+  - false
+  - true
+  exprWithNewline: "print\r\nme!"
+  exprWithQuotes: what'll happen here?
   foo: bar
+  nullVal: null
+  nullVallExpr: null
   otherList:
   - 1
   - 2
@@ -17,5 +25,7 @@ bob:
   - a
   - b
   - c
+  stringWithNewline: "print\r\nme!"
+  stringWithQuotes: what'll happen here?
 foo: bar bar
 
