@@ -12,8 +12,6 @@ bob:
   - true
   - false
   - true
-  exprWithNewline: "print\r\nme!"
-  exprWithQuotes: what'll happen here?
   foo: bar
   nullVal: null
   nullVallExpr: null
@@ -25,7 +23,7 @@ bob:
   - a
   - b
   - c
-  stringWithNewline: "print\r\nme!"
-  stringWithQuotes: what'll happen here?
+  specialCharsExpr: "what'll\r\nhappen\r\nhere\\?"
+  specialCharsString: "what'll\r\nhappen\r\nhere\\?"
 foo: bar bar
 

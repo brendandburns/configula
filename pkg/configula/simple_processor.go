@@ -76,15 +76,18 @@ func toPythonString(input string) string {
 
 	for _, char := range input {
 		switch(char) {
+		case '\\':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('\\')
+		case '\'':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('\'')
 		case '\r':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('r')
 		case '\n':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('n')
-		case '\'':
-			buffer.WriteByte('\\')
-			buffer.WriteByte('\'')
 		default:
 			buffer.WriteRune(char)
 		}

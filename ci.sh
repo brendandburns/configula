@@ -17,3 +17,4 @@ done
 rm test-output/*.test
 
 echo "Tests passed!"
+
