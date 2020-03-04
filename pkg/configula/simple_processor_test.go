@@ -39,6 +39,15 @@ func TestRecursiveGenerate(t *testing.T) {
 			},
 			"[YamlNode('foo'),YamlNode('bar'),YamlNode('baz'),YamlNode(2)]",
 		},
+		// bool parsing
+		{&yaml.Node{Tag: "!!bool", Value: "TRUE"}, "YamlNode(True)"},
+		{&yaml.Node{Tag: "!!bool", Value: "true"}, "YamlNode(True)"},
+		{&yaml.Node{Tag: "!!bool", Value: "fAlSe"}, "YamlNode(False)"},
+		// null
+		{&yaml.Node{Tag: "!!null" }, "YamlNode(None)"},
+		// string escaping
+		{&yaml.Node{Tag: "!!str", Value: "f'oo'bar"}, "YamlNode('f\\'oo\\'bar')"},
+		{&yaml.Node{Tag: "!!str", Value: "foo\r\nbar"}, "YamlNode('foo\\r\\nbar')"},
 	}
 	for _, test := range tests {
 		output := recursiveGenerate("", test.node)

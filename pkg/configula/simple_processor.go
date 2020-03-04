@@ -3,6 +3,8 @@ package configula
 import (
 	"fmt"
 	"strings"
+	"bytes"
+	"strconv"
 	yaml "gopkg.in/yaml.v3"
 )
 
@@ -43,7 +45,7 @@ func recursiveGenerate(indent string, node *yaml.Node) string {
 		result += indent + "}"
 		return result;
 	case "!!str":
-		return fmt.Sprintf("%sYamlNode('%s')", indent, node.Value)
+		return fmt.Sprintf("%sYamlNode(%s)", indent, toPythonString(node.Value))
 	case "!!seq":
 		items := []string{}
 		for ix := range node.Content {
@@ -54,9 +56,45 @@ func recursiveGenerate(indent string, node *yaml.Node) string {
 		return "YamlExpr(lambda: " + node.Value + ")"
 	case "!!int":
 		return fmt.Sprintf("%sYamlNode(%s)", indent, node.Value)
+	case "!!bool":
+		boolVal, _ := strconv.ParseBool(node.Value)
+		if (boolVal) {
+			return fmt.Sprintf("%sYamlNode(True)", indent)
+		} else {
+			return fmt.Sprintf("%sYamlNode(False)", indent)
+		}
+	case "!!null":
+		return fmt.Sprintf("%sYamlNode(None)", indent)
 	default:
 		return fmt.Sprintf("%s", node.Tag)
 	}
+}
+
+func toPythonString(input string) string {
+	var buffer bytes.Buffer
+	buffer.WriteByte('\'')
+
+	for _, char := range input {
+		switch(char) {
+		case '\\':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('\\')
+		case '\'':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('\'')
+		case '\r':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('r')
+		case '\n':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('n')
+		default:
+			buffer.WriteRune(char)
+		}
+	}
+
+	buffer.WriteByte('\'')
+	return buffer.String()
 }
 
 func (s *simpleProcessor) Process(sections []Section) error {

@@ -1,5 +1,6 @@
 foobar = 'blah %d' % 1
 c = 'a'
+specialChars = 'what\'ll\r\nhappen\r\nhere\\?'
 
 def fn(val):
   return val + '!!'
@@ -17,6 +18,11 @@ baz = <
     - b
     - c
     otherList: [1, 2, 3]
+    boolList: [true, false, !~ True]
+    nullVal: null
+    nullVallExpr: !~ None
+    specialCharsString: "what'll\r\nhappen\r\nhere\\?"
+    specialCharsExpr: !~ specialChars
     anotherList: [
       a, b, c, !~ c + 'd' + fn('bazzer')
     ]
